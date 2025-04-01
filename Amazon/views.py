@@ -22,7 +22,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
-#Test#123
 
 def home(request):
 	products = Product.objects.all()
