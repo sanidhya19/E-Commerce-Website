@@ -5,3 +5,4 @@ requests
 djangorestframework
 djangorestframework-simplejwt
 stripe
+Pillow
