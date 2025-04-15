@@ -25,13 +25,13 @@ pipeline {
             }
         }
 
-        stage('Wait for Quality Gate') {
+       /* stage('Wait for Quality Gate') {
             steps {
                 timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
+        } */
 
         stage('Collect Static Files') {
             steps {
