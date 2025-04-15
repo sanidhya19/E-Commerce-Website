@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 Django==4.2
 gunicorn
 psycopg2-binary
 requests
 
-=======
-Django==4.2
-gunicorn
-psycopg2-binary
-requests
->>>>>>> refs/remotes/origin/main
