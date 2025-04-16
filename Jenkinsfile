@@ -51,6 +51,7 @@ pipeline {
             steps {
                 sshagent (credentials: ["${SSH_CRED_ID}"]) {
                     sh '''
+                    set -x
 
                     echo "Packaging project..."
                     tar --exclude=venv --exclude=app.tar.gz -czf app.tar.gz .
@@ -59,12 +60,12 @@ pipeline {
                     scp app.tar.gz $DEPLOY_USER@$DEPLOY_HOST:/tmp/
 
                     echo "Extracting on server..."
-                    ssh $DEPLOY_USER@$DEPLOY_HOST <<EOF
+                    ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "
                      rm -rf $DEPLOY_PATH/*
                      mkdir -p $DEPLOY_PATH
                      tar xzf /tmp/app.tar.gz -C $DEPLOY_PATH
                      rm /tmp/app.tar.gz
-                    EOF
+                    "
                     '''
                 }
             }
