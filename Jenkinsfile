@@ -43,7 +43,7 @@ pipeline {
                     scp app.tar.gz $DEPLOY_USER@$DEPLOY_HOST:/tmp/
 
                     ssh $DEPLOY_USER@$DEPLOY_HOST "
-                       rm -rf /var/www/ecomm
+                       rm -rf /var/www/ecomm/*
                        mkdir -p /var/www/ecomm
                        tar -xzf /tmp/app.tar.gz -C /var/www/ecomm
                        cd /var/www/ecomm
