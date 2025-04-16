@@ -53,7 +53,7 @@ pipeline {
                     sh '''
 
                     echo "Packaging project..."
-                    tar --exclude=venv-czf app.tar.gz .
+                    tar --exclude=venv -czf app.tar.gz .
 
                     echo "Transferring to server..."
                     scp app.tar.gz $DEPLOY_USER@$DEPLOY_HOST:/tmp/
