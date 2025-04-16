@@ -65,6 +65,14 @@ pipeline {
                      mkdir -p $DEPLOY_PATH
                      tar xzf /tmp/app.tar.gz -C $DEPLOY_PATH
                      rm /tmp/app.tar.gz
+
+                     cd $DEPLOY_PATH
+                     python3 -m venv venv
+                     source venv/bin/activate
+                     pip install -r requirements.txt
+                     python3 manage.py migrate --noinput
+                     python3 manage.py collectstatic --noinput
+                     deactivate
                     "
                     '''
                 }
