@@ -33,64 +33,29 @@ pipeline {
             }
         } */
 
-        stage('Collect Static Files') {
-            steps {
-                sh '''
-                #!/bin/bash
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt || true
-                python3 manage.py migrate --noinput
-                python3 manage.py collectstatic --noinput
-                deactivate
-                '''
-            }
-        }
-
-        stage('Deploy to Nginx') {
+        stage('Deploy') {
             steps {
                 sshagent (credentials: ["${SSH_CRED_ID}"]) {
                     sh '''
                     set -x
 
-                    echo "Packaging project..."
                     tar --exclude=venv --exclude=app.tar.gz -czf app.tar.gz .
-
-                    echo "Transferring to server..."
                     scp app.tar.gz $DEPLOY_USER@$DEPLOY_HOST:/tmp/
 
-                    echo "Extracting on server..."
-                    ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "
-                     rm -rf $DEPLOY_PATH/*
-                     mkdir -p $DEPLOY_PATH
-                     tar xzf /tmp/app.tar.gz -C $DEPLOY_PATH
-                     rm /tmp/app.tar.gz
-
-                     cd $DEPLOY_PATH
-                     python3 -m venv venv
-                     source venv/bin/activate
-                     pip install -r requirements.txt
-                     python3 manage.py migrate --noinput
-                     python3 manage.py collectstatic --noinput
-                     deactivate
+                    ssh $DEPLOY_USER@$DEPLOY_HOST "
+                       rm -rf /var/www/ecomm
+                       mkdir -p /var/www/ecomm
+                       tar -xzf /tmp/app.tar.gz -C /var/www/ecomm
+                       cd /var/www/ecomm
+                       docker-compose down
+                       docker-compose up -d --build
                     "
                     '''
                 }
             }
         }
-
-        stage('Restart Services (optional)') {
-            steps {
-                sshagent (credentials: ["${SSH_CRED_ID}"]) {
-                    sh '''
-                     ssh $DEPLOY_USER@$DEPLOY_HOST "
-                     sudo systemctl restart gunicorn
-                     sudo systemctl restart nginx
-                    "
-                    '''
-                }
-            }
-        }
-    }
+      }
+   }
+ }
 }
 
