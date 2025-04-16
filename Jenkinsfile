@@ -75,10 +75,10 @@ pipeline {
             steps {
                 sshagent (credentials: ["${SSH_CRED_ID}"]) {
                     sh '''
-                    ssh $DEPLOY_USER@$DEPLOY_HOST <<EOF
-                    sudo systemctl restart gunicorn
-                    sudo systemctl restart nginx
-                    EOF
+                     ssh $DEPLOY_USER@$DEPLOY_HOST "
+                     sudo systemctl restart gunicorn
+                     sudo systemctl restart nginx
+                    "
                     '''
                 }
             }
