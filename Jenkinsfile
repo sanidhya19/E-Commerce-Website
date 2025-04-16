@@ -53,18 +53,19 @@ pipeline {
                     sh '''
 
                     echo "Packaging project..."
-                    tar czf app.tar.gz *
+                    tar --exclude=venv-czf app.tar.gz .
 
                     echo "Transferring to server..."
                     scp app.tar.gz $DEPLOY_USER@$DEPLOY_HOST:/tmp/
 
-                   echo "Extracting on server..."
-                   ssh $DEPLOY_USER@$DEPLOY_HOST <<EOF
-                   rm -rf $DEPLOY_PATH/*
-                   mkdir -p $DEPLOY_PATH
-                   tar xzf /tmp/app.tar.gz -C $DEPLOY_PATH
-                   EOF
-                   '''
+                    echo "Extracting on server..."
+                    ssh $DEPLOY_USER@$DEPLOY_HOST <<EOF
+                     rm -rf $DEPLOY_PATH/*
+                     mkdir -p $DEPLOY_PATH
+                     tar xzf /tmp/app.tar.gz -C $DEPLOY_PATH
+                     rm /tmp/app.tar.gz
+                    EOF
+                    '''
                 }
             }
         }
