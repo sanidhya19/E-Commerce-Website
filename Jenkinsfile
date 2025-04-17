@@ -54,10 +54,10 @@ pipeline {
                        docker-compose up -d --build
 
                        echo "Running Django migrations..."
-                       docker-compose exec web python manage.py migrate
+                       docker-compose run --rm web python manage.py migrate
 
                        echo "Collecting static files..."
-                       docker-compose exec web sh -c "python manage.py collectstatic --noinput"
+                       docker-compose run --rm web python manage.py collectstatic --noinput
                     "
                     '''
                 }
