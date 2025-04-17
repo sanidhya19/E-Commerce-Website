@@ -39,7 +39,10 @@ pipeline {
                     sh '''
                     set -x
 
+                    echo "Creating deployment archive..."
                     tar --exclude=venv --exclude=app.tar.gz -czf app.tar.gz .
+
+                    echo "Transferring archive to server..."
                     scp app.tar.gz $DEPLOY_USER@$DEPLOY_HOST:/tmp/
 
                     ssh $DEPLOY_USER@$DEPLOY_HOST "
@@ -47,8 +50,14 @@ pipeline {
                        mkdir -p /var/www/ecomm
                        tar -xzf /tmp/app.tar.gz -C /var/www/ecomm
                        cd /var/www/ecomm
-                       docker-compose down
+                       docker-compose down || true
                        docker-compose up -d --build
+
+                       echo "Running Django migrations..."
+                       docker compose exec web python manage.py migrate
+
+                       echo "Collecting static files..."
+                       docker compose exec web python manage.py collectstatic --noinput
                     "
                     '''
                 }
