@@ -38,7 +38,7 @@ pipeline {
 
         stage('Build Docker Image'){
             steps {
-               scrpit{
+               script{
                    sh """
                    docker build -t ${HARBOR_REGISTRY_URL}/${HARBOR_REPO}:latest .
                    """
