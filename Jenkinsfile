@@ -7,7 +7,10 @@ pipeline {
         DEPLOY_USER = 'ubuntu'          
         DEPLOY_HOST = '103.173.15.147'   
         DEPLOY_PATH = '/var/www/ecomm'    
-        SSH_CRED_ID = 'nginx-ssh'  
+        SSH_CRED_ID = 'nginx-ssh'
+
+        HARBOR_REGISTRY_URL = '103.174.130.22'
+        HARBOR_REPO = 'ecomm'
     }
 
     stages {
@@ -32,6 +35,38 @@ pipeline {
                 }
             }
         } */
+
+        stage('Build Docker Image'){
+            steps {
+               scrpit{
+                   sh """
+                   docker build -t ${HARBOR_REGISTRY_URL}/${HARBOR_REPO}:latest .
+                   """
+                }
+            }
+        }
+
+         stage('Login to Harbor') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'harbor-cred', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD')]) {
+                        sh """
+                        echo ${HARBOR_PASSWORD} | docker login ${HARBOR_REGISTRY_URL} -u ${HARBOR_USERNAME} --password-stdin
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image to Harbor') {
+            steps {
+                script {
+                    sh """
+                    docker push ${HARBOR_REGISTRY_URL}/${HARBOR_REPO}:latest
+                    """
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
