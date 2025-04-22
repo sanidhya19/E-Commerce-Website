@@ -8,7 +8,7 @@ pipeline {
         DEPLOY_HOST = '103.173.15.147'   
         DEPLOY_PATH = '/var/www/ecomm'    
         SSH_CRED_ID = 'nginx-ssh'
-
+        TAG= 'test'
         HARBOR_REGISTRY_URL = '103.174.130.22'
         HARBOR_REPO = 'ecomm'
     }
@@ -62,7 +62,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker push ${HARBOR_REGISTRY_URL}/${HARBOR_REPO}:latest
+                    docker push ${HARBOR_REGISTRY_URL}/${HARBOR_REPO}/${TAG}:latest
                     """
                 }
             }
