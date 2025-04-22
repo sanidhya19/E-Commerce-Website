@@ -48,12 +48,12 @@ pipeline {
 
          stage('Login to Harbor') {
             steps {
-                script {
                     withCredentials([usernamePassword(credentialsId: 'harbor-cred', usernameVariable: 'HARBOR_USERNAME', passwordVariable: 'HARBOR_PASSWORD')]) {
-                        sh """
+                        sh '''
+                        set +x
                         echo ${HARBOR_PASSWORD} | docker login ${HARBOR_REGISTRY_URL} -u ${HARBOR_USERNAME} --password-stdin
-                        """
-                    }
+                        set -x
+                        '''
                 }
             }
         }
