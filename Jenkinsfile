@@ -98,6 +98,30 @@ pipeline {
                 }
             }
         }
+        stage('Wait for App') {
+           steps {
+              sh 'sleep 10'
+           }
+        }         
+
+        stage('Security Scan with ZAP') {
+            steps {
+             sh '''
+             docker run --rm \
+               -v $(pwd):/zap/wrk \
+               zaproxy/zap-stable zap-baseline.py \
+               -t http://103.174.130.22 \
+              -r zap_report.html
+             '''
+       }
+    }
+
+    stage('Archive Report') {
+      steps {
+        archiveArtifacts artifacts: 'zap_report.html', fingerprint: true
       }
-   }
+    }
+
+  }
+}
 
