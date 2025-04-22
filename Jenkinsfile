@@ -40,7 +40,7 @@ pipeline {
             steps {
                script{
                    sh """
-                   docker build -t ${HARBOR_REGISTRY_URL}/${HARBOR_REPO}:latest .
+                   docker build -t ${HARBOR_REGISTRY_URL}/${HARBOR_REPO}/${TAG}:latest .
                    """
                 }
             }
