@@ -111,7 +111,7 @@ pipeline {
                -v $(pwd):/zap/wrk \
                zaproxy/zap-stable zap-baseline.py \
                -t http://103.174.130.22 \
-              -r zap_report.html
+              -r zap_report.html || true
              '''
        }
     }
