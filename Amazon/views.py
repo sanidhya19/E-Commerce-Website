@@ -19,13 +19,29 @@ from .cart import Cart
 from django.views import View
 from .models import CartItem, ShippingAddress
 from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
 
 
 # Create your views here.
+#Test#123
 
 def home(request):
 	products = Product.objects.all()
 	return render(request, 'home.html', {'products':products})
+
+def product_detail(request, product_id):
+    cache_key = f"product:{product_id}"
+    product = cache.get(cache_key)
+    if product is None:
+        product = get_object_or_404(Product, id=product_id)
+        cache.set(cache_key, product)
+        
+    description_points = product.description.split(';')
+    
+    return render(request, 'product_detail.html', {
+        'product': product,
+        'description_points': description_points
+        })
 
 def about(request):
 	return render(request, 'about.html', {})
@@ -76,43 +92,44 @@ def register_user(request):
 
 
 
-@login_required(login_url='login')  
+@login_required(login_url='login')
 def add_to_cart(request, product_id):
-    cart = request.session.get("cart", {})
+    product = get_object_or_404(Product, id=product_id)
+    
+    product_data = {
+        "name" : product.name,
+        "price" : str(product.price),
+        "quantity" : 1
+    }
+    
+    cart = Cart(request)
+    cart.add(str(product.id), product_data)
+    
+    return redirect('cart')
 
-    product = Product.objects.get(id=product_id)
-
-    if str(product_id) in cart:
-        cart[str(product_id)]["quantity"] += 1
-    else:
-        cart[str(product_id)] = {
-            "name": product.name,
-            "price": int(product.price),
-            "quantity": 1
-        }
-
-    request.session["cart"] = cart  
-    request.session.modified = True
-    return redirect("cart")
-
+@login_required(login_url='login')
 def cart_view(request):
     cart = Cart(request)
-    return render(request, 'cart.html', {
-        'cart_items': cart.get_items(),
-        'total_price': cart.get_total_price(),
+    return render(request, 'cart.html',{
+        'cart_items' : cart.get_items(),
+        'total_price' : cart.get_total_price(),
     })
+    
 
+@login_required(login_url='login')
 def remove_from_cart(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
+    
     return redirect('cart')
 
+@login_required(login_url='login')
 def clear_cart(request):
-    if 'cart' in request.session:
-        del request.session['cart']  
-    return redirect('cart')
-
+    cart = Cart(request)
+    cart.clear()
+    
+    return redirect('cart')    
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -268,7 +285,7 @@ def payment_success(request):
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
-    endpoint_secret = ""
+    endpoint_secret = "whsec_z7cWZEVVv7ecsLGqwiBuAtE4X8PBtvk4"
     try:
         event = stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret

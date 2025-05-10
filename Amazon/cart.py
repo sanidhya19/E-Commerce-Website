@@ -1,43 +1,54 @@
+import json
 from decimal import Decimal
 from django.conf import settings
-from Amazon.models import Product  # Ensure this is correct
+from ecomm.redis_client import redis_client
+from .models import Product
 
 class Cart:
     def __init__(self, request):
-        """Initialize the cart using session data."""
-        self.session = request.session
-        cart = self.session.get(settings.CART_SESSION_ID)
+        self.user_id = request.user.id if request.user.is_authenticated else request.session.session_key
 
-        if not cart:
-            cart = self.session[settings.CART_SESSION_ID] = {}
-
-        self.cart = cart
+        if not self.user_id:
+            request.session.save()
+            self.user_id = request.session.session_key
+        self.key = f"cart:{self.user_id}"
 
     def add(self, product_id, product_data):
-        self.cart[product_id] = product_data
-        self.session['cart'] = self.cart
-        self.session.modified = True
+        existing = redis_client.hget(self.key, product_id)
+
+        if existing:
+            existing_data = json.loads(existing)
+            existing_data['quantity'] += product_data.get('quantity', 1)
+            redis_client.hset(self.key, product_id, json.dumps(existing_data))
+        else:
+            redis_client.hset(self.key, product_id, json.dumps(product_data))
 
     def save(self):
-        """Mark session as modified to ensure it saves changes."""
-        self.session.modified = True
+        pass
 
     def remove(self, product):
-        """Remove a product from the cart."""
         product_id = str(product.id)
-
-        if product_id in self.cart:
-            del self.cart[product_id]
-            self.save()
+        redis_client.hdel(self.key, product_id)
 
     def get_items(self):
-        for item in self.cart.values():
-            item['total_price'] = Decimal(item.get('price', 0)) * item.get('quantity', 1)
-        return self.cart.values()
+        cart_data = redis_client.hgetall(self.key)
+        print(f">>> Raw Redis data for key {self.key}: {cart_data}")  # Diagnostic print
+
+        items = []
+
+        for item_data in cart_data.values():
+            item = json.loads(item_data)
+            print(f">>> Item loaded from Redis: {item}")  # Diagnostic print
+            item['total_price'] = Decimal(item.get('price', 0)) * item.get('quantity', 0)
+            items.append(item)
+
+        return items
 
     def get_total_price(self):
-        return sum(Decimal(item.get('price', 0)) * item.get('quantity', 1) for item in self.cart.values())
+        return sum(
+            Decimal(item.get('price', 0)) * item.get('quantity', 1)
+            for item in self.get_items()
+        )
 
     def clear(self):
-        del self.session[settings.CART_SESSION_ID]
-        self.save()
+        redis_client.delete(self.key)
