@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
+SECRET_KEY = 'django-insecure-znvc0t+u3tqy8439$*98dmhnhqp!g=5b4*p^)ql8elvl-zi4oj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS =  ["*"]
 
 
 # Application definition
@@ -80,12 +80,8 @@ WSGI_APPLICATION = 'ecomm.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT", "5432"),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -133,10 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-       BASE_DIR / 'static/',
-        ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = ['static/']
 
 
 
@@ -152,14 +145,28 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STRIPE_PUBLIC_KEY = " "
-STRIPE_SECRET_KEY = " "
-STRIPE_WEBHOOK_SECRET = " "
+STRIPE_PUBLIC_KEY = "pk_test_51R4yroPGJIa0H9VjXIRULndWscE9I2NLLo2Fh9qZDIfsegV8PQ3WFt5MdOnbfNtQrSEMwNrHVtNtDv8HuExPOh5H005ZEr7ZNR"
+STRIPE_SECRET_KEY = "sk_test_51R4yroPGJIa0H9VjIgOXQgOSJKPGxUokTcAYX3yiA4SwSnUw25Ge4AixrCLId0YLrmYJBm2aKbLQr3EigVFTO36900rDWOkw8y"
+STRIPE_WEBHOOK_SECRET = "whsec_z7cWZEVVv7ecsLGqwiBuAtE4X8PBtvk4"
 
 
-CSRF_TRUSTED_ORIGINS = [ "http://103.173.15.147"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://c484-103-39-135-218.ngrok-free.app",
+    "https://c484-103-39-135-218.ngrok-free.app",
+]
 
 CSRF_COOKIE_SECURE = True
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        }
+    }
+}
 
 
 
