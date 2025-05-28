@@ -14,23 +14,21 @@
   <h2>Featured Products</h2>
   <div class="product-grid">
     {% for product in products %}
-      <a href="{% url 'product_detail' product.id %}" class="product-link">
-        <div class="product-card">
+      <div class="product-card" onclick="location.href='{% url 'product_detail' product.id %}';" style="cursor: pointer;">
+        {% if product.is_sale %}
+          <div class="sale-badge">Sale!</div>
+        {% endif %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+        <h3>{{ product.name }}</h3>
+        <p>
           {% if product.is_sale %}
-            <div class="sale-badge">Sale!</div>
+          <strike>${{ product.price }}</strike> &nbsp; <span>${{ product.sale_price }}</span>
+          {% else %}
+            ${{ product.price }}
           {% endif %}
-          <img src="{{ product.image.url }}" alt="{{ product.name }}" />
-          <h3>{{ product.name }}</h3>
-          <p>
-            {% if product.is_sale %}
-            <strike>${{ product.price }}</strike> &nbsp; <span>${{ product.sale_price }}</span>
-            {% else %}
-              ${{ product.price }}
-            {% endif %}
         </p>
-        </div>
-      </a>
-    {% endfor %}
+      </div>
+    {% endfor %}  
   </div>
 </section>
 
