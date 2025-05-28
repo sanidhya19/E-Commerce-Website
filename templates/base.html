@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinimalShop - Modern E-commerce</title>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/loginstyle.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    {% include "navbar.html" %}
+
+    {% if messages %}
+    <div class="alert-messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+    <footer>
+        <p>&copy; {% now "Y" %} MinimalShop. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.animation = 'slideOut 0.3s ease-in forwards';
+                    setTimeout(() => alert.remove(), 300);
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
