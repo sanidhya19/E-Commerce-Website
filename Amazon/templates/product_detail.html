@@ -1,300 +1,161 @@
 {% extends "base.html" %}
-
 {% block content %}
-<style>
-  .product-detail-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 30px;
-    background: #ffffff;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    border-radius: 12px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-  }
 
-  .product-gallery {
-    position: relative;
-  }
-
-  .main-image {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-    cursor: zoom-in;
-  }
-
-  .main-image:hover {
-    transform: scale(1.02);
-  }
-
-  .thumbnail-container {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-  }
-
-  .thumbnail {
-    width: 60px;
-    height: 60px;
-    border-radius: 6px;
-    object-fit: cover;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.2s ease;
-  }
-
-  .thumbnail:hover, .thumbnail.active {
-    border-color: #5cb85c;
-  }
-
-  .product-info {
-    padding: 20px 0;
-  }
-
-  .product-title {
-    font-size: 2.2rem;
-    color: #222;
-    margin-bottom: 15px;
-    font-weight: 600;
-  }
-
-  .product-meta {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-
-  .rating {
-    display: flex;
-    align-items: center;
-    color: #ffc107;
-    font-weight: bold;
-  }
-
-  .review-count {
-    color: #666;
-    font-size: 0.9rem;
-  }
-
-  .availability {
-    color: #5cb85c;
-    font-weight: 500;
-  }
-
-  .price-container {
-    margin: 25px 0;
-  }
-
-  .current-price {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #d9534f;
-  }
-
-  .original-price {
-    font-size: 1.2rem;
-    color: #888;
-    text-decoration: line-through;
-    margin-left: 10px;
-  }
-
-  .discount-badge {
-    background: #d9534f;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    margin-left: 10px;
-  }
-
-  .product-description {
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 25px;
-    padding-left: 1.2rem;
-  }
-
-  .product-description li {
-    margin-bottom: 8px;
-    position: relative;
-    padding-left: 10px;
-  }
-
-  
-
-  .action-buttons {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-  }
-
-  .btn {
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .btn-primary {
-    background-color: #5cb85c;
-    color: white;
-    flex: 1;
-  }
-
-  .btn-primary:hover {
-    background-color: #4cae4c;
-    transform: translateY(-2px);
-  }
-
-  .btn-secondary {
-    background-color: #f8f9fa;
-    color: #333;
-    border: 1px solid #ddd;
-  }
-
-  .btn-secondary:hover {
-    background-color: #e9ecef;
-    transform: translateY(-2px);
-  }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    margin-top: 30px;
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease;
-  }
-
-  .back-link:hover {
-    color: #0056b3;
-    text-decoration: underline;
-  }
-
-  .back-link svg {
-    margin-right: 5px;
-    .back-to-home {
-        display: inline-flex;
-        align-items: center;
-        margin-top: 30px;
-        padding: 8px 16px;
-        background-color: #f8f9fa;
-        color: #495057;
-        text-decoration: none;
-        font-weight: 500;
-        border-radius: 6px;
-        transition: all 0.2s ease;
-        border: 1px solid #dee2e6;
-      }
-    
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .product-detail-container {
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-    
-    .action-buttons {
-      flex-direction: column;
-    }
-  }
-</style>
-
-<div class="product-detail-container">
-  <div class="product-gallery">
-    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="main-image" id="mainImage">
-    <div class="thumbnail-container">
-      <img src="{{ product.image.url }}" alt="Thumbnail 1" class="thumbnail active" onclick="changeImage(this, '{{ product.image.url }}')">
-      <!-- Add more thumbnails here if you have multiple product images -->
-    </div>
-  </div>
-
-  <div class="product-info">
-    <h1 class="product-title">{{ product.name }}</h1>
-    
-    <div class="product-meta">
-      <div class="rating">
-        ★★★★☆ <!-- Replace with dynamic rating if available -->
-        <span class="review-count">(42 reviews)</span> <!-- Replace with actual review count -->
-      </div>
-      <span class="availability">In Stock</span> <!-- Add dynamic stock status -->
+<div class="product-detail">
+    <div class="product-gallery">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="main-image">
     </div>
 
-    <div class="price-container">
-      {% if product.is_sale %}
-        <span class="current-price">${{ product.sale_price }}</span>
-        <span class="original-price">${{ product.price }}</span>
-      {% else %}
-        <span class="current-price">${{ product.price }}</span>
-      {% endif %}
+    <div class="product-info">
+        <h1>{{ product.name }}</h1>
+        
+        <div class="price-container">
+            {% if product.is_sale %}
+                <span class="sale-price">${{ product.sale_price }}</span>
+                <span class="original-price">${{ product.price }}</span>
+                <span class="discount-badge">Sale</span>
+            {% else %}
+                <span class="current-price">${{ product.price }}</span>
+            {% endif %}
+        </div>
+
+        <div class="product-description">
+            {% for point in description_points %}
+                <p>{{ point }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'add_to_cart' product.id %}" class="add-to-cart">
+                Add to Cart
+            </a>
+            <a href="{% url 'home' %}" class="continue-shopping">
+                Continue Shopping
+            </a>
+        </div>
     </div>
-
-    <ul class="product-description">
-      {% for point in description_points %}
-        <li>{{ point }}</li>
-      {% endfor %}
-    </ul>
-
-    <div class="action-buttons">
-      <button class="btn btn-primary" onclick="window.location.href='{% url 'add_to_cart' product.id %}'">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-        </svg>
-        Add to Cart
-      </button>
-      <button class="btn btn-secondary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-        </svg>
-        Wishlist
-      </button>
-    </div>
-
-    <a href="{% url 'home' %}" class="back-link">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-      </svg>
-      Back to Home
-    </a>
-  </div>
 </div>
 
-<script>
-  function changeImage(thumbnail, imageUrl) {
-    // Update main image
-    document.getElementById('mainImage').src = imageUrl;
-    
-    // Update active thumbnail
-    document.querySelectorAll('.thumbnail').forEach(img => {
-      img.classList.remove('active');
-    });
-    thumbnail.classList.add('active');
-  }
+<style>
+.product-detail {
+    max-width: 1280px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
 
-  // Add zoom functionality
-  document.getElementById('mainImage').addEventListener('click', function() {
-    this.classList.toggle('zoomed');
-    if (this.classList.contains('zoomed')) {
-      this.style.transform = 'scale(2)';
-      this.style.cursor = 'zoom-out';
-    } else {
-      this.style.transform = 'scale(1)';
-      this.style.cursor = 'zoom-in';
+.product-gallery {
+    position: sticky;
+    top: 2rem;
+}
+
+.main-image {
+    width: 100%;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.product-info h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.price-container {
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sale-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.original-price {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    text-decoration: line-through;
+}
+
+.current-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.discount-badge {
+    background: var(--accent);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+}
+
+.product-description {
+    margin: 2rem 0;
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+.product-description p {
+    margin-bottom: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.add-to-cart {
+    background: var(--primary);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.add-to-cart:hover {
+    background: var(--primary-dark);
+}
+
+.continue-shopping {
+    background: var(--surface);
+    color: var(--text);
+    padding: 1rem 2rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.continue-shopping:hover {
+    background: var(--background);
+    border-color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+    .product-detail {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin: 2rem auto;
     }
-  });
-</script>
+
+    .product-gallery {
+        position: static;
+    }
+}
+</style>
 {% endblock %}

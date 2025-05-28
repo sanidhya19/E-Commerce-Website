@@ -1,269 +1,232 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
+
 <div class="checkout-container">
-  <h2 class="checkout-title">Checkout Summary</h2>
+    <h1>Checkout</h1>
 
-  {% if cart_items and cart_items|length > 0 %}
-  <table class="checkout-table">
-    <thead>
-      <tr>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in cart_items %}
-      <tr>
-        <td>{{ item.name }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>${{ item.price }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    {% if cart_items %}
+    <div class="checkout-grid">
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+            <div class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <span class="item-name">{{ item.name }}</span>
+                    <span class="item-quantity">x{{ item.quantity }}</span>
+                    <span class="item-price">${{ item.price }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="total">
+                <span>Total</span>
+                <span>${{ total_price }}</span>
+            </div>
+        </div>
 
-  <p class="total-amount">Total Amount: <span>${{ total_price }}</span></p>
+        <div class="shipping-form">
+            <h2>Shipping Address</h2>
+            
+            {% if saved_addresses %}
+            <div class="saved-addresses">
+                <h3>Saved Addresses</h3>
+                {% for address in saved_addresses %}
+                <label class="address-option">
+                    <input type="radio" name="address_id" value="{{ address.id }}">
+                    <span>{{ address.address }}, {{ address.city }}, {{ address.state }}, {{ address.postal_code }}, {{ address.country }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% endif %}
 
-  <!-- Shipping Address Section -->
-  <h3 class="address-title">Select Shipping Address</h3>
-
-  <form method="POST" class="checkout-form">
-    {% csrf_token %}
-
-    <!-- Show saved addresses if available -->
-    {% if saved_addresses %}
-    <div class="saved-addresses">
-      {% for address in saved_addresses %}
-      <label class="address-card">
-        <input
-          type="radio"
-          name="address_id"
-          value="{{ address.id }}"
-          class="address-option"
-        />
-        <span
-          >{{ address.address }}, {{ address.city }}, {{ address.state }}, {{ address.postal_code }}, {{ address.country }}</span
-        >
-      </label>
-      {% endfor %}
+            <form method="POST" class="new-address-form">
+                {% csrf_token %}
+                <h3>New Address</h3>
+                <div class="form-group">
+                    <input type="text" name="address" placeholder="Street Address" required>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <input type="text" name="city" placeholder="City" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="state" placeholder="State" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <input type="text" name="postal_code" placeholder="Postal Code" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="country" placeholder="Country" required>
+                    </div>
+                </div>
+                <button type="submit" class="checkout-button">Proceed to Payment</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-cart">
+        <p>Your cart is empty</p>
+        <a href="{% url 'home' %}" class="continue-shopping">Continue Shopping</a>
     </div>
     {% endif %}
-
-    <!-- New Address Option -->
-    <div class="new-address-option">
-      <label>
-        <input
-          type="radio"
-          name="address_id"
-          value="new"
-          class="address-option"
-          checked
-        />
-        Enter a new address:
-      </label>
-    </div>
-
-    <!-- New Address Form -->
-    <div id="new-address-form" class="new-address-form">
-      <input type="text" name="address" placeholder="Street Address" />
-      <input type="text" name="city" placeholder="City" />
-      <input type="text" name="state" placeholder="State" />
-      <input type="text" name="postal_code" placeholder="Postal Code" />
-      <input type="text" name="country" placeholder="Country" />
-    </div>
-
-    <button type="submit" class="checkout-button">Confirm & Pay</button>
-  </form>
-
-  {% else %}
-  <p class="empty-cart-message">Your cart is empty.</p>
-  <a href="{% url 'home' %}" class="continue-shopping">Continue Shopping</a>
-  {% endif %}
 </div>
 
-<!-- JavaScript to Toggle New Address Fields -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const addressOptions = document.querySelectorAll(".address-option");
-    const newAddressForm = document.getElementById("new-address-form");
-
-    function toggleNewAddressFields() {
-      const selected = document.querySelector(".address-option:checked");
-      if (selected && selected.value === "new") {
-        newAddressForm.style.display = "block";
-        newAddressForm.classList.add("fade-in");
-        newAddressForm.querySelectorAll("input").forEach((input) => {
-          input.required = true;
-        });
-      } else {
-        newAddressForm.style.display = "none";
-        newAddressForm.classList.remove("fade-in");
-        newAddressForm.querySelectorAll("input").forEach((input) => {
-          input.required = false;
-        });
-      }
-    }
-
-    addressOptions.forEach((option) => {
-      option.addEventListener("change", toggleNewAddressFields);
-    });
-
-    toggleNewAddressFields();
-  });
-</script>
-
 <style>
-  /* Overall container */
-  .checkout-container {
-    max-width: 800px;
-    margin: auto;
-    text-align: center;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
+.checkout-container {
+    max-width: 1280px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
 
-  /* Checkout Title */
-  .checkout-title {
-    margin-bottom: 20px;
-    font-size: 28px;
-    color: #333;
-  }
+.checkout-container h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--text);
+}
 
-  /* Table Styles */
-  .checkout-table {
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+}
+
+.order-summary {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    height: fit-content;
+}
+
+.order-summary h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.cart-items {
+    margin-bottom: 1.5rem;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.item-name {
+    flex: 1;
+}
+
+.item-quantity {
+    color: var(--text-light);
+    margin: 0 1rem;
+}
+
+.item-price {
+    font-weight: 600;
+}
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--border);
+}
+
+.shipping-form {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.shipping-form h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.saved-addresses {
+    margin-bottom: 2rem;
+}
+
+.address-option {
+    display: block;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.address-option:hover {
+    border-color: var(--primary);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group input {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-  }
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+}
 
-  .checkout-table th,
-  .checkout-table td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-  }
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
 
-  .checkout-table thead {
-    background-color: #f4f4f4;
-    font-weight: bold;
-  }
-
-  /* Total Amount */
-  .total-amount {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #444;
-  }
-
-  .total-amount span {
-    color: #e44d26;
-  }
-
-  /* Address Section */
-  .address-title {
-    margin-bottom: 10px;
-    font-size: 22px;
-    color: #333;
-  }
-
-  .saved-addresses {
-    text-align: left;
-    max-width: 500px;
-    margin: 10px auto;
-  }
-
-  .address-card {
-    display: block;
-    padding: 10px;
-    margin-bottom: 10px;
-    background: #fff;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  .address-card:hover {
-    background: #f0f0f0;
-  }
-
-  .new-address-option {
-    margin: 10px auto;
-    max-width: 500px;
-    text-align: left;
-  }
-
-  /* New Address Form */
-  .new-address-form {
-    display: none;
-    transition: all 0.3s ease-in-out;
-  }
-
-  .fade-in {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .new-address-form input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    display: block;
-  }
-
-  /* Checkout Button */
-  .checkout-button {
-    margin-top: 20px;
-    padding: 12px 25px;
-    font-size: 16px;
-    cursor: pointer;
-    background: #e44d26;
+.checkout-button {
+    background: var(--primary);
     color: white;
+    width: 100%;
+    padding: 1rem;
     border: none;
-    border-radius: 5px;
-    transition: 0.3s;
-  }
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1.5rem;
+}
 
-  .checkout-button:hover {
-    background: #d13d1a;
-  }
+.checkout-button:hover {
+    background: var(--primary-dark);
+}
 
-  /* Empty Cart */
-  .empty-cart-message {
-    font-size: 18px;
-    color: #666;
-  }
+.empty-cart {
+    text-align: center;
+    padding: 4rem;
+}
 
-  /* Continue Shopping Link */
-  .continue-shopping {
-    display: inline-block;
-    margin-top: 10px;
-    font-size: 16px;
-    color: #e44d26;
-    text-decoration: none;
-    font-weight: bold;
-  }
+.empty-cart p {
+    font-size: 1.25rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
 
-  .continue-shopping:hover {
-    text-decoration: underline;
-  }
+@media (max-width: 768px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .checkout-container {
+        margin: 2rem auto;
+    }
+}
 </style>
-
 {% endblock %}
