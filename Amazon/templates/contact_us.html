@@ -1,130 +1,175 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
+
 <div class="contact-container">
-  <h2 class="contact-title">Contact Us</h2>
-  <p class="contact-subtitle">
-    Have any questions? We'd love to hear from you! Reach out to us via phone or
-    email, or simply drop your message below.
-  </p>
+    <div class="contact-content">
+        <div class="contact-info">
+            <h1>Contact Us</h1>
+            <p class="contact-subtitle">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+            
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <h3>Email</h3>
+                    <a href="mailto:{{ email }}">{{ email }}</a>
+                </div>
+                
+                <div class="contact-method">
+                    <h3>Phone</h3>
+                    <a href="tel:{{ phone }}">{{ phone }}</a>
+                </div>
+            </div>
+        </div>
 
-  <div class="contact-info">
-    <p><strong>Phone:</strong> <a href="tel:+1234567890">+1 234 567 890</a></p>
-    <p>
-      <strong>Email:</strong>
-      <a href="mailto:support@example.com">support@example.com</a>
-    </p>
-  </div>
+        <div class="contact-form-container">
+            <h2>Send a Message</h2>
+            
+            <form method="POST" class="contact-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Name</label>
+                    {{ form.name }}
+                </div>
 
-  <h3 class="form-title">Send us a message</h3>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                </div>
 
-  <form method="POST" class="contact-form">
-    {% csrf_token %}
-    <div class="form-group">{{ form.name.label_tag }} {{ form.name }}</div>
-    <div class="form-group">{{ form.email.label_tag }} {{ form.email }}</div>
-    <div class="form-group">
-      {{ form.message.label_tag }} {{ form.message }}
+                <div class="form-group">
+                    <label for="{{ form.message.id_for_label }}">Message</label>
+                    {{ form.message }}
+                </div>
+
+                <button type="submit" class="submit-button">Send Message</button>
+            </form>
+        </div>
     </div>
-    <button type="submit" class="submit-btn">Send Message</button>
-  </form>
 </div>
 
 <style>
-  /* General Container */
-  .contact-container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
+.contact-container {
+    max-width: 1280px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
 
-  /* Titles & Subtitles */
-  .contact-title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-  }
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+}
 
-  .contact-subtitle {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 20px;
-  }
+.contact-info h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
 
-  /* Contact Info */
-  .contact-info {
-    font-size: 18px;
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
+.contact-subtitle {
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
 
-  .contact-info a {
-    color: #e44d26;
+.contact-methods {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.contact-method {
+    margin-bottom: 1.5rem;
+}
+
+.contact-method:last-child {
+    margin-bottom: 0;
+}
+
+.contact-method h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.contact-method a {
+    color: var(--primary);
     text-decoration: none;
-  }
+    font-size: 1.125rem;
+}
 
-  .contact-info a:hover {
+.contact-method a:hover {
     text-decoration: underline;
-  }
+}
 
-  /* Form */
-  .form-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #444;
-  }
+.contact-form-container {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
 
-  .contact-form {
-    text-align: left;
-  }
+.contact-form-container h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
 
-  .form-group {
-    margin-bottom: 15px;
-  }
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
-  .form-group label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-  }
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
 
-  .form-group input,
-  .form-group textarea {
-    width: calc(100% - 20px);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
+.form-group label {
+    font-weight: 500;
+}
 
-  .form-group textarea {
-    height: 100px;
+.form-group input,
+.form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    min-height: 150px;
     resize: vertical;
-  }
+}
 
-  /* Submit Button */
-  .submit-btn {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    background: #e44d26;
+.submit-button {
+    background: var(--primary);
     color: white;
+    padding: 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
-  }
+    transition: background-color 0.2s;
+}
 
-  .submit-btn:hover {
-    background: #d13d1a;
-  }
+.submit-button:hover {
+    background: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .contact-container {
+        margin: 2rem auto;
+    }
+}
 </style>
-
 {% endblock %}

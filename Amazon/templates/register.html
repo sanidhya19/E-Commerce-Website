@@ -1,34 +1,133 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block content %}
 
-<!-- Header-->
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">Register</h1>
-      <p class="lead fw-normal text-white-50 mb-0">New? Create an Account.</p>
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Create Account</h1>
+        <p class="auth-subtitle">Join MinimalShop today</p>
+
+        <form method="POST" action="{% url 'register' %}" class="auth-form">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                <small class="help-text">{{ field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="auth-button">Create Account</button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account? 
+            <a href="{% url 'login' %}">Sign in</a>
+        </p>
     </div>
-  </div>
-</header>
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <br /><br />
-      <form method="POST" action="{% url 'register' %}">
-        {% csrf_token %} {{ form.as_p }}
-
-        <button type="submit" class="btn btn-secondary">Register</button>
-      </form>
-
-      <br /><br />
-      <br /><br />
-      <br /><br />
-      <br /><br />
-      <br /><br />
-      <br /><br />
-      <br /><br />
-    </div>
-  </div>
 </div>
 
+<style>
+.auth-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-card {
+    background: var(--surface);
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 500px;
+}
+
+.auth-card h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.form-group input {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+}
+
+.help-text {
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+.error-text {
+    color: var(--danger);
+    font-size: 0.875rem;
+}
+
+.auth-button {
+    background: var(--primary);
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+}
+
+.auth-button:hover {
+    background: var(--primary-dark);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-light);
+}
+
+.auth-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+</style>
 {% endblock %}
