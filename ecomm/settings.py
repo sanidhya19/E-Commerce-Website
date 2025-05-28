@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'django-insecure-znvc0t+u3tqy8439$*98dmhnhqp!g=5b4*p^)ql8elvl-zi4oj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -145,9 +145,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STRIPE_PUBLIC_KEY = ""
-STRIPE_SECRET_KEY = ""
-STRIPE_WEBHOOK_SECRET = ""
+STRIPE_PUBLIC_KEY = "pk_test_51R4yroPGJIa0H9VjXIRULndWscE9I2NLLo2Fh9qZDIfsegV8PQ3WFt5MdOnbfNtQrSEMwNrHVtNtDv8HuExPOh5H005ZEr7ZNR"
+STRIPE_SECRET_KEY = "sk_test_51R4yroPGJIa0H9VjIgOXQgOSJKPGxUokTcAYX3yiA4SwSnUw25Ge4AixrCLId0YLrmYJBm2aKbLQr3EigVFTO36900rDWOkw8y"
+STRIPE_WEBHOOK_SECRET = "whsec_z7cWZEVVv7ecsLGqwiBuAtE4X8PBtvk4"
 
 
 CSRF_TRUSTED_ORIGINS = [
