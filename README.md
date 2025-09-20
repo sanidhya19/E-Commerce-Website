@@ -1,95 +1,108 @@
-**Overview**
+# E-Commerce Website
 
-This project is a comprehensive e-commerce website developed using Django. It features a user-friendly interface for browsing products, managing a shopping cart, and completing orders. The backend is built with Django, ensuring a robust and scalable application.
+## Overview
 
+This **E-Commerce Website** is a full-featured web application built using Django.  
+It allows users to browse products, manage a shopping cart, and complete orders seamlessly.  
+The application also includes an admin panel for managing products, orders, and users.
 
+---
 
-**Features**
+## Features
 
-**Product Catalog**: Browse a wide range of products with detailed descriptions and images.
+- **Product Catalog:** Browse a wide range of products with detailed descriptions and images.  
+- **Shopping Cart:** Add products to your cart, view quantities, and proceed to checkout.  
+- **Order Management:** Track orders and view order history.  
+- **User Authentication:** Secure login and registration system.  
+- **Admin Panel:** Manage products, orders, and users easily through the admin interface.
 
-**Shopping Cart**: Add products to your cart, view quantities, and proceed to checkout.
+---
 
-**Order Management**: Track your orders and view order history.
+## Technologies Used
 
-**User Authentication**: Secure login and registration system for users.
+- **Frontend:** HTML, CSS, JavaScript  
+- **Backend:** Python, Django  
+- **Database:** SQLite (default for Django)  
+- **Authentication:** Django's built-in authentication system
 
-**Admin Panel**: Manage products, orders, and users through a comprehensive admin interface.
+---
 
+## Installation
 
+### Prerequisites
 
-**Technologies Used**
+- Python 3.x  
+- pip (Python package installer)  
+- git  
 
-**Backend**: Django, Redis
+### Steps
 
-**Database**: SQLite (default for Django)
+1. **Clone the repository**
 
-**Frontend**: HTML, CSS, JavaScript
-
-**Authentication**: Django's built-in authentication system
-
-
-
-
-**Installation**
-
-**Clone the repository:**
-
+```bash
 git clone https://github.com/sanidhya19/E-Commerce-Website.git
 cd E-Commerce-Website
+```
 
 
-**Set up a virtual environment:**
+2. **Set up a virtual environment:**
 
+```bash
 python -m venv venv
 source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+```
 
+3. **Apply migrations:**
 
-**Install dependencies:**
-
-pip install -r requirements.txt
-
-
-**Apply migrations:**
-
+```bash
 python manage.py migrate
+```
 
+4. **Run the development server:**
 
-**Run the development server:**
-
+```bash
 python manage.py runserver
-
+```
 
 Visit http://127.0.0.1:8000/ in your browser to see the website in action.
 
+---
 
 
+## Usage
 
-**Usage**
-
-**User Registration**: Navigate to the registration page to create a new account.
-
-**Product Browsing**: Browse products by category or search for specific items.
-
-**Shopping Cart**: Add products to your cart and proceed to checkout.
-
-**Order Tracking**: View your order history and track the status of current orders.
+- **User Registration**: Navigate to the registration page to create a new account.
+- **Product Browsing**: Browse products by category or search for specific items.
+- **Shopping Cart**: Add products to your cart and proceed to checkout.
+- **Order Tracking**: View your order history and track the status of current orders.
 
 
 
 
-**Contributing**
+## Contributing
 
 Contributions are welcome! To contribute:
 
-Fork the repository.
+1. Fork the repository.
 
-Create a new branch (git checkout -b feature-name).
+2. Create a new branch 
 
-Make your changes.
+```bash
+git checkout -b feature-name
+```
 
-Commit your changes (git commit -am 'Add new feature').
+3. Make your changes.
 
-Push to the branch (git push origin feature-name).
+4. Commit your changes 
 
-Create a new Pull Request.
+```bash
+git commit -am 'Add new feature'
+```
+
+5. Push to the branch 
+
+```bash
+git push origin feature-name
+```
+
+6. Create a new Pull Request.
