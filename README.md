@@ -31,7 +31,7 @@ The application also includes an admin panel for managing products, orders, and 
 
 ### Prerequisites
 
-- Python 3.x  
+- Python 3.0  
 - pip (Python package installer)  
 - git  
 
